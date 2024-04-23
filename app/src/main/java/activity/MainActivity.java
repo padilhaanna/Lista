@@ -2,6 +2,9 @@ package activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import adapter.MyAdapter;
 import model.MyItem;
 import padilha.anna.lista.R;
 
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     static int NEW_ITEM_REQUEST =1;
     List<MyItem> itens = new ArrayList<>();
     static int PHOTO_PICKER_REQUEST = 1;
+    MyAdapter myAdapter;
     //Uri photoSelected = null;
 
     @Override
@@ -39,10 +44,21 @@ public class MainActivity extends AppCompatActivity {
 
         }
     });
+        RecyclerView rvItens = findViewById(R.id.rvItens); // pega recyclerview ->
 
+        myAdapter = new MyAdapter(this, itens); //cria myAdapter
+        rvItens.setAdapter(myAdapter); //seta no rv, para agora saber como construir itens da lista
 
+        rvItens.setHasFixedSize(true); //diz que tamanho não varia
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this); //faz com que listas apareçam de forma linear, na vertical
+        rvItens.setLayoutManager(layoutManager); //seta no rv
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvItens.getContext(), DividerItemDecoration.VERTICAL); //linha separando cada item
+        rvItens.addItemDecoration(dividerItemDecoration); //seta no rv
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { //função
         super.onActivityResult(requestCode, resultCode, data);
@@ -51,10 +67,9 @@ public class MainActivity extends AppCompatActivity {
                 MyItem myItem = new MyItem(); //MyItem guarda os dados vindos de NewItemActivity
                 myItem.title = data.getStringExtra("title");
                 myItem.description= data.getStringExtra("desc");
-
-                myItem.description = data.getStringExtra("description");
                 myItem.photo = data.getData();
                 itens.add(myItem);
+                myAdapter.notifyItemInserted(itens.size()-1); //atualiza o recycle view
             }
         }
     }//ViewModels: os itens não ficam mais salvos na activity e sim nesse view model,

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,26 +20,30 @@ import padilha.anna.lista.R;
 public class NewItemActivity extends AppCompatActivity {
 
     static int PHOTO_PICKER_REQUEST = 1;
-    Uri photoSelected = null;
+    Uri photoSelected = null; //Uri: dado que não está dentro do app
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
 
-        NewItemActivityViewModel vm = new ViewModelProvider(this).get(NewItemActivityViewModel.class); //declarando o vm
-        Uri selectPhotoLocation = vm.getSelectPhotoLocation(); //pegando o enderço da imagem no vm
-        if(selectPhotoLocation != null){
-            ImageView imvphotoPreview = findViewById(R.id.imvPhotoPreview);
-            imvphotoPreview.setImageURI(selectPhotoLocation);
-        }
+        ImageButton imgCI = findViewById(R.id.imbCI); //conecta com o butão
+        imgCI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT); //abertura da galeria
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, PHOTO_PICKER_REQUEST);
+            }
+        });
 
-        ImageButton imgCI = findViewById(R.id.imbCI); //pega botao
-        imgCI.setOnClickListener(new View.OnClickListener() { //ouvidor de click pro botao
+        Button btnAddItem = findViewById(R.id.btnAddItem);
+        btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (photoSelected == null) { //condição para verificar se foto foi selecionada
-                    Toast.makeText(NewItemActivity.this, "É necessário selecionar uma imagem!", Toast.LENGTH_LONG).show();//se nao, exibe mensagem
+                        Toast.makeText(NewItemActivity.this, "É necessário selecionar uma imagem!", Toast.LENGTH_LONG).show();//se nao, exibe mensagem
                     return;
                 }
 
@@ -72,12 +77,10 @@ public class NewItemActivity extends AppCompatActivity {
 
         if(requestCode == PHOTO_PICKER_REQUEST){ //identifica se seleciou uma foto
             if(resultCode == Activity.RESULT_OK){ //codigo ok
-                Uri photoSelected = data.getData(); //se tudo ok, pega os dados
+                photoSelected = data.getData(); //se tudo ok, pega os dados
                 ImageView imvphotoPreview = findViewById(R.id.imvPhotoPreview); //pega a imagem
                 imvphotoPreview.setImageURI(photoSelected); //pega foto selecionada e coloca para exibir
 
-                NewItemActivityViewModel vm = new ViewModelProvider(this).get(NewItemActivityViewModel.class);
-                vm.setSelectPhotoLocation(photoSelected); //exi na tela
             }
         }
     }
