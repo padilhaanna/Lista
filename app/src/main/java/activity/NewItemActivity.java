@@ -67,7 +67,7 @@ public class NewItemActivity extends AppCompatActivity {
                 i.putExtra("description", description); //seta descrição
                 setResult(Activity.RESULT_OK, i); //indica resultado
                 finish();//finaliza activity
-                }
+            }
         });
     }
     @Override
@@ -75,11 +75,11 @@ public class NewItemActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data); //requestCode: id chamada - resultCode: se Activity retornou - data: dados retornados
 
 
-        if(requestCode == PHOTO_PICKER_REQUEST){ //identifica se seleciou uma foto
+        if(requestCode == PHOTO_PICKER_REQUEST){ //identifica se selecionou uma foto
             if(resultCode == Activity.RESULT_OK){ //codigo ok
                 photoSelected = data.getData(); //se tudo ok, pega os dados
-                ImageView imvphotoPreview = findViewById(R.id.imvPhotoPreview); //pega a imagem
-                imvphotoPreview.setImageURI(photoSelected); //pega foto selecionada e coloca para exibir
+                ImageView imvPhotoPreview = findViewById(R.id.imvPhotoPreview); //pega a imagem
+                imvPhotoPreview.setImageURI(photoSelected); //pega foto selecionada e coloca para exibir
 
             }
         }
