@@ -67,7 +67,16 @@ public class MainActivity extends AppCompatActivity {
                 MyItem myItem = new MyItem(); //MyItem guarda os dados vindos de NewItemActivity
                 myItem.title = data.getStringExtra("title");
                 myItem.description= data.getStringExtra("description");
-                myItem.photo = data.getData();
+                //myItem.photo = data.getData();
+                Uri selectedPhotoURI = data.getData();
+                try{
+                    //cria uma cópia da imagem original, resolve problema de utilizar endereço URI e perder a permissão
+                    Bitmap photo = Util.getBitmap( MainActivity.this, selectedPhotoURI, 100, 100 ); //Util pega imagem e guarda no Bitmap
+                    myItem.photo = photo; //guarda o Bitmap em um objeto do tipo myItem
+                }
+                catch (FileNotFoundException e){ //se arquivo de imagem não for encontrado
+                    e.printStackTrace();
+                }
                 itens.add(myItem);
                 myAdapter.notifyItemInserted(itens.size()-1); //atualiza o recycle view
             }
