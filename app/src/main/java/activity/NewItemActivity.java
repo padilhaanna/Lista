@@ -1,9 +1,5 @@
 package activity;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,17 +11,31 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import model.NewItemActivityViewModel;
 import padilha.anna.lista.R;
 
 public class NewItemActivity extends AppCompatActivity {
 
     static int PHOTO_PICKER_REQUEST = 1;
-    Uri photoSelected = null; //Uri: dado que não está dentro do app
+    Uri photoSelected = null; //não é mais utilizado como atributo, pois endereço é guardado em NewItemAcitivyViewModel
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_item);
+
+        NewItemActivityViewModel vm = new ViewModelProvider( this ).get(NewItemActivityViewModel.class ); //pega ViewModel
+
+        Uri selectPhotoLocation = vm.getSelectPhotoLocation();//pega endereço Uri dentro do ViewModel
+        if(selectPhotoLocation != null) {//caso não seja nulo, usuario escolheu imagem antes de rotacionar
+            ImageView imvPhotoPreview = findViewById(R.id.imvPhotoPreview);//se não for nulo,pega imagem
+            imvPhotoPreview.setImageURI(selectPhotoLocation);//seta imagem
+        }
+
 
         ImageButton imgCI = findViewById(R.id.imbCI); //conecta com o butão
         imgCI.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +84,15 @@ public class NewItemActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data); //requestCode: id chamada - resultCode: se Activity retornou - data: dados retornados
 
-
         if(requestCode == PHOTO_PICKER_REQUEST){ //identifica se selecionou uma foto
             if(resultCode == Activity.RESULT_OK){ //codigo ok
-                photoSelected = data.getData(); //se tudo ok, pega os dados
+                //photoSelected = data.getData(); //se tudo ok, pega os dados
+                Uri photoSelected = data.getData();
                 ImageView imvPhotoPreview = findViewById(R.id.imvPhotoPreview); //pega a imagem
                 imvPhotoPreview.setImageURI(photoSelected); //pega foto selecionada e coloca para exibir
+
+                NewItemActivityViewModel vm = new ViewModelProvider( this).get( NewItemActivityViewModel.class );//pega ViewModel
+                vm.setSelectPhotoLocation(photoSelected);//guarda endereço Uri no ViewModel
 
             }
         }

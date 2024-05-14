@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import adapter.MyAdapter;
+import model.MainActivityViewModel;
 import model.MyItem;
 import padilha.anna.lista.R;
 
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 catch (FileNotFoundException e){ //se arquivo de imagem não for encontrado
                     e.printStackTrace();
                 }
+                //lista de itens não é mais atributo de MainActivity
+                MainActivityViewModel vm = new ViewModelProvider( this ).get(MainActivityViewModel.class ); //MainAcitivyViewModel guarda lista itens
+                List<MyItem> itens = vm.getItens();
                 itens.add(myItem);
                 myAdapter.notifyItemInserted(itens.size()-1); //atualiza o recycle view
             }
