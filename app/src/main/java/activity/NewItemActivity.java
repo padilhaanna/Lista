@@ -29,7 +29,6 @@ public class NewItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_item);
 
         NewItemActivityViewModel vm = new ViewModelProvider( this ).get(NewItemActivityViewModel.class ); //pega ViewModel
-
         Uri selectPhotoLocation = vm.getSelectPhotoLocation();//pega endereço Uri dentro do ViewModel
         if(selectPhotoLocation != null) {//caso não seja nulo, usuario escolheu imagem antes de rotacionar
             ImageView imvPhotoPreview = findViewById(R.id.imvPhotoPreview);//se não for nulo,pega imagem
