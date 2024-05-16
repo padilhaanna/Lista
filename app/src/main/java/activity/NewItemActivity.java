@@ -51,8 +51,9 @@ public class NewItemActivity extends AppCompatActivity {
         btnAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (photoSelected == null) { //condição para verificar se foto foi selecionada
+                NewItemActivityViewModel vm = new ViewModelProvider(NewItemActivity.this).get(NewItemActivityViewModel.class);
+                Uri selectPhotoLocation = vm.getSelectPhotoLocation();
+                if (selectPhotoLocation == null) { //condição para verificar se foto foi selecionada
                         Toast.makeText(NewItemActivity.this, "É necessário selecionar uma imagem!", Toast.LENGTH_LONG).show();//se nao, exibe mensagem
                     return;
                 }
@@ -72,7 +73,7 @@ public class NewItemActivity extends AppCompatActivity {
                 }
 
                 Intent i = new Intent(); //intent guarda dados que vão voltar para exibir na main
-                i.setData(photoSelected); //seta uri da imagem
+                i.setData(selectPhotoLocation); //seta a imagem
                 i.putExtra("title", title); //seta titulo
                 i.putExtra("description", description); //seta descrição
                 setResult(Activity.RESULT_OK, i); //indica resultado

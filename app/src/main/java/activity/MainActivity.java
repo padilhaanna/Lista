@@ -22,6 +22,7 @@ import java.util.List;
 import adapter.MyAdapter;
 import model.MainActivityViewModel;
 import model.MyItem;
+import util.Util;
 import padilha.anna.lista.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,8 +38,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FloatingActionButton fabAddItem = findViewById(R.id.fabAddNewItem); //pega o botão
 
-        RecyclerView rvItens = findViewById(R.id.rvItens); // pega recyclerview
+        fabAddItem.setOnClickListener(new View.OnClickListener() { //pega os clicks
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, NewItemActivity.class); //intent explícito (navegar para outra página)
+                startActivityForResult(i, NEW_ITEM_REQUEST); //determina que NewItemAcitivity irá retornar dados para a main (NEW_ITEM - id de chamada)
 
+            }
+        });
+
+        RecyclerView rvItens = findViewById(R.id.rvItens); // pega recyclerview
+        MainActivityViewModel vm = new ViewModelProvider(this).get(MainActivityViewModel.class); //obtem vm
+        List<MyItem> itens = vm.getItens(); //pega a lista do vm e passa para o meu adapter
         myAdapter = new MyAdapter(this, itens); //cria myAdapter
         rvItens.setAdapter(myAdapter); //seta no rv, para agora saber como construir itens da lista
 
@@ -50,14 +61,6 @@ public class MainActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvItens.getContext(), DividerItemDecoration.VERTICAL); //linha separando cada item
         rvItens.addItemDecoration(dividerItemDecoration); //seta no rv
 
-        fabAddItem.setOnClickListener(new View.OnClickListener() { //pega os clicks
-            @Override
-            public void onClick(View v) {
-                    Intent i = new Intent(MainActivity.this, NewItemActivity.class); //intent explícito (navegar para outra página)
-                    startActivityForResult(i, NEW_ITEM_REQUEST); //determina que NewItemAcitivity irá retornar dados para a main (NEW_ITEM - id de chamada)
-
-            }
-        });
     }
 
     @Override
